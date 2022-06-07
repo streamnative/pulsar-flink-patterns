@@ -96,7 +96,7 @@ public class EnrichmentStream {
 
         SingleOutputStreamOperator<EnrichedEvent> enrichedStream = transactionStream
                 .keyBy(Transaction::getAccountId)
-                .connect(customerStream.keyBy(Customer::getClientId))
+                .connect(customerStream.keyBy(Customer::getCustomerId))
                 .process(new EnrichmentHandler(missingStateTag))
                 .uid("EnrichmentHandler")
                 .name("EnrichmentHandler");

@@ -26,6 +26,8 @@ public class CustomersProducer {
         Stream<Customer> customers = DataSourceUtils.loadDataFile(AppConfig.CUSTOMERS_FILE_PATH)
                 .map(DataSourceUtils::toCustomer);
 
+        customers.forEach(System.out::println);
+        System.exit(0);
         logger.info("Creating Pulsar Client ...");
 
         PulsarClient pulsarClient = ClientUtils.initPulsarClient(AppConfig.token);
@@ -43,7 +45,7 @@ public class CustomersProducer {
             Customer customer = it.next();
 
             customerProducer.newMessage()
-                    .key(customer.getClientId())
+                    .key(customer.getCustomerId())
                     .value(customer)
                     .eventTime(System.currentTimeMillis())
                     .sendAsync()

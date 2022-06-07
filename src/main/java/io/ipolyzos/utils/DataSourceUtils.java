@@ -19,14 +19,15 @@ public class DataSourceUtils {
     public static Transaction toTransaction(String line) {
         String[] tokens = line.split(",");
         return new Transaction(
+                tokens[0],
                 tokens[1],
+                tokens[8],
+                Timestamp.valueOf(tokens[7].replace("T", " ")).getTime(),
                 tokens[2],
                 tokens[3],
-                tokens[4],
-                tokens[5],
-                tokens[6],
-                tokens[7],
-                Timestamp.valueOf(tokens[15].replace("T", " ")).getTime()
+                parseDouble(tokens[5]),
+                parseDouble(tokens[5]),
+                tokens[6]
         );
     }
 
@@ -42,13 +43,13 @@ public class DataSourceUtils {
 
     public static Customer toCustomer(String line) {
         String[] tokens = line.split(",");
+        String fullName = String.format("%s %s %s", tokens[8], tokens[9], tokens[10]);
+
         return new Customer(
                 tokens[0],
                 tokens[1],
                 tokens[7],
-                tokens[8],
-                tokens[9],
-                tokens[10],
+                fullName,
                 tokens[11],
                 tokens[12],
                 tokens[13],
@@ -61,7 +62,7 @@ public class DataSourceUtils {
         );
     }
 
-    private static long parseId(String id) {
-        return (long) Double.parseDouble(id.replace(".0", ""));
+    private static Double parseDouble(String id) {
+        return Double.parseDouble(id.replace(".0", ""));
     }
 }

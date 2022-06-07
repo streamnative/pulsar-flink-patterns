@@ -10,10 +10,11 @@ import lombok.NoArgsConstructor;
 public class Transaction {
     private String transactionId;
     private String accountId;
+    private String customerId;
+    private Long eventTime;
     private String type;
     private String operation;
-    private String amount;
-    private String balance;
+    private Double amount;
+    private Double balance;
     private String kSymbol;
-    private Long eventTime;
 }

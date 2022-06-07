@@ -73,7 +73,7 @@ public class EnrichmentStream {
 
         DataStream<EnrichedEvent> enrichedStream = transactionStream
                 .keyBy(Transaction::getAccountId)
-                .connect(customerStream.keyBy(Customer::getClientId))
+                .connect(customerStream.keyBy(Customer::getCustomerId))
                 .process(new EnrichmentHandler())
                 .uid("CustomerLookup")
                 .name("CustomerLookup");
