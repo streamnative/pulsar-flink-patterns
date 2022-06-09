@@ -24,8 +24,8 @@ When the cluster is up and running successfully run the following command:
 this script will create all the required topics and policies needed for the provided examples.
 
 ### Table of Contents
-1. [Warmup - Connecting to Pulsar](warmup)
-2. [Connecting Streams](connecting-streams)
+1. [Warmup - Connecting to Pulsar](#warmup)
+2. [Connecting Streams](#connecting-streams)
 3. Buffering Events
 4. Connecting Streams
 5. Performing Data Enrichment and Lookups
