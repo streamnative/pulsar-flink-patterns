@@ -33,9 +33,10 @@ this script will create all the required topics and policies needed for the prov
 7. [Checkpoints](#checkpoints)
 
 ### Warmup
-Connect to Pulsar and consumer data:
-   - Using the Datastream API
-   - Using the Flink SQL API
+**Outcomes:** How can we connect to Pulsar and start consuming events.
+We will how we can achieve this by using:
+1. [The Datastream API](src/main/java/io/ipolyzos/compute/source/datastream) 
+2. [The Flink SQL API](src/main/java/io/ipolyzos/compute/source/sql)
 
 ### Connecting Streams
 **Use Case**
