@@ -26,46 +26,36 @@ this script will create all the required topics and policies needed for the prov
 ### Table of Contents
 1. [Warmup - Connecting to Pulsar](#warmup)
 2. [Connecting Streams](#connecting-streams)
-3. Buffering Events
-4. Connecting Streams
-5. Performing Data Enrichment and Lookups
-6. Using Side Outputs to handle "unhappy paths"
-7. Flink State Backends
-8. Checkpoints, Restart Strategies and Savepoints
+3. [Warmup - Keyed State](#keyed-state)
+4. [Performing Data Enrichment and Lookups](#data-enrichment-and-lookups)
+5. [Side Outputs](#side-outputs)
+6. [State Backends](#state-backends)
+7. [Checkpoints](#checkpoints)
 
 ### Warmup
-1. Connect to Pulsar and consumer data:
+Connect to Pulsar and consumer data:
    - Using the Datastream API
    - Using the Flink SQL API
 
 ### Connecting Streams
-Use Case:
+**Use Case**
 
 * Using the Union Function
   * Input datastreams need to be of the same input data type
 * Using the Connect Functions
   * Allows the input datastreams to be of different types
 
-### Buffering events
-**Use Case:** You are consuming data from multiple topics and you need wait for events in both topics to arrive
+### Keyed State
+**Use Case**
 
-### Keyed State Warmup
-State Types
+### Data Enrichment and Lookups
+**Use Case**
 
+### Side Outputs
+**Use Case**
 
-### 
-State Types
-===========
-1. Operator State
-   1. private to an operator task
-   2. can't be read/written by another operator task
-2. Keyed State
-   1. one instance per key
-3. About keys
-   1. a piece of data that is used to group events
-   2. multiple events can be assigned to the same key
-   3. an event can be assigned to a single key
-   4. examples of keys
-      1. hash code of a String field of the event
-      2. a number field of the event, mod 10
-      3. a number event type (enum)
+### State Backends
+**Use Case**
+
+### Checkpoints
+**Use Case**
