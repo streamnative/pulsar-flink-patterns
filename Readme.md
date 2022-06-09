@@ -67,7 +67,7 @@ Other options to explore:
 We will review with an example that holds the state per customer key in order to calculate - [How many transactions we have per customer](src/main/java/io/ipolyzos/compute/state)
 
 ### Data Enrichment and Lookups
-**Use Case:**
+**Use Case:**  
 In some scenarios we need to be able to perform **Data Enrichment** and/or **Data Lookups** having on topic as an 
 **append-only stream** while the other topic is a **changelog** stream - keeps only the latest state for a particular key.  
 We will see how to implement such use cases by using Flink's combining Flink's process function and Keyed State to enrich 
