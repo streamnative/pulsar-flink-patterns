@@ -44,10 +44,8 @@ The input topics events can either the same or different schemas.
 When the input events have the same schema you can use the **union** function, otherwise you can use the **connect** function.
 **Outcome:** We will how to achieve this using two input transaction topics - one containing **credit** transactions and one with **debits** and **merge** these two
 streams into one datastream. We will see two different approaches:
-* **Union Function:** Input datastreams need to be of the same input data type
-* **Connect Function:** Input datastreams to be of different types
-
-You can find the relevant examples [here](src/main/java/io/ipolyzos/compute/mutlistreams)
+* [Union Function:](src/main/java/io/ipolyzos/compute/mutlistreams) Input datastreams need to be of the same input data type
+* [Connect Function:](src/main/java/io/ipolyzos/compute/mutlistreams) Input datastreams to be of different types
 
 Extra to explore:
 * [Window Joins](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/datastream/operators/joining/#window-join)
