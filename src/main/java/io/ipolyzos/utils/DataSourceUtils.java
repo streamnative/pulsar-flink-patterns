@@ -72,18 +72,18 @@ public class DataSourceUtils {
         PulsarSource<Transaction> transactionSource = PulsarSource.builder()
                 .setServiceUrl(AppConfig.SERVICE_URL)
                 .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
-                .setStartCursor(StartCursor.latest())
+                .setStartCursor(StartCursor.earliest())
                 .setTopics(AppConfig.TRANSACTIONS_TOPIC_AVRO)
                 .setDeserializationSchema(
                         PulsarDeserializationSchema
                                 .pulsarSchema(AvroSchema.of(Transaction.class), Transaction.class)
                 )
-                .setSubscriptionName("txn-subs")
+                .setSubscriptionName("txn-subscription")
                 .setSubscriptionType(SubscriptionType.Exclusive)
                 .build();
 
         WatermarkStrategy<Transaction> watermarkStrategy =
-                WatermarkStrategy.<Transaction>forBoundedOutOfOrderness(Duration.ofSeconds(0))
+                WatermarkStrategy.<Transaction>forBoundedOutOfOrderness(Duration.ofSeconds(5))
                         .withTimestampAssigner(
                                 (SerializableTimestampAssigner<Transaction>) (txn, l) -> txn.getEventTime()
                         );

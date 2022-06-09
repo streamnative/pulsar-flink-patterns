@@ -11,12 +11,12 @@ docker exec -it pulsar-flink-stateful-streams_taskmanager_1 ./bin/flink run \
 
 # To run v2 of the code
 #docker exec -it pulsar-flink-stateful-streams_taskmanager_1 ./bin/flink run \
-#--class io.ipolyzos.compute.v2.EnrichmentStream \
+#--class io.ipolyzos.compute.sideoutputs.EnrichmentStream \
 #  job.jar
 #
 ## To run v3 of the code
 #docker exec -it pulsar-flink-stateful-streams_taskmanager_1 ./bin/flink run \
-#--class io.ipolyzos.compute.v3.EnrichmentStream \
+#--class io.ipolyzos.compute.fault_tolerance.EnrichmentStream \
 #  job.jar
 #
 ## To run v4 of the code

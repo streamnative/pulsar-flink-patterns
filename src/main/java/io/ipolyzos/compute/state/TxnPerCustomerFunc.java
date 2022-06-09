@@ -27,9 +27,9 @@ public class TxnPerCustomerFunc extends KeyedProcessFunction<String, Transaction
         ctState.update(customerTxnNum + 1);
         out.collect(
                 String.format(
-                        "Total '%s' transactions for customer '%s'.",
-                        customerTxnNum + 1,
-                        transaction.getCustomerId()
+                        "Transactions for customer '%s' - %s.",
+                        transaction.getCustomerId(),
+                        customerTxnNum + 1
                 )
         );
     }

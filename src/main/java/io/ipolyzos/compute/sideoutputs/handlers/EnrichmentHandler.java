@@ -1,4 +1,4 @@
-package io.ipolyzos.compute.v3.handlers;
+package io.ipolyzos.compute.sideoutputs.handlers;
 
 import io.ipolyzos.models.Customer;
 import io.ipolyzos.models.EnrichedEvent;

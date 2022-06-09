@@ -1,4 +1,4 @@
-package io.ipolyzos.compute.v2.handlers;
+package io.ipolyzos.compute.fault_tolerance.handlers;
 
 import io.ipolyzos.models.Customer;
 import io.ipolyzos.models.EnrichedEvent;

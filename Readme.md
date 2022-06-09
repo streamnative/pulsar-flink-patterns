@@ -55,14 +55,23 @@ Other options to explore:
   * the events need to belong to the same window and match on some join condition
 * [Interval Joins](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/datastream/operators/joining/#interval-join) 
   * the events need to be between the same interval  
+  
   > **lowerBoundInterval < timeA - timeB < upperBoundInterval**
 
 
 ### Keyed State
-**Use Case**
+**Outcomes:**  
+1. Understand the difference between **Operator State** and **Keyed State**
+2. How Flink handles state and the available State primitives  
+
+We will review with an example that holds the state per customer key in order to calculate - [How many transactions we have per customer](src/main/java/io/ipolyzos/compute/state)
 
 ### Data Enrichment and Lookups
-**Use Case**
+**Use Case:**
+In some scenarios we need to be able to perform **Data Enrichment** and/or **Data Lookups** having on topic as an 
+**append-only stream** while the other topic is a **changelog** stream - keeps only the latest state for a particular key.  
+We will see how to implement such use cases by using Flink's combining Flink's process function and Keyed State to enrich 
+transaction events with user information. You can find the relevant examples [here](src/main/java/io/ipolyzos/compute/enrichment).
 
 ### Side Outputs
 **Use Case**

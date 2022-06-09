@@ -1,6 +1,6 @@
-package io.ipolyzos.compute.v2;
+package io.ipolyzos.compute.fault_tolerance;
 
-import io.ipolyzos.compute.v2.handlers.EnrichmentHandler;
+import io.ipolyzos.compute.fault_tolerance.handlers.EnrichmentHandler;
 import io.ipolyzos.config.AppConfig;
 import io.ipolyzos.models.Customer;
 import io.ipolyzos.models.EnrichedEvent;

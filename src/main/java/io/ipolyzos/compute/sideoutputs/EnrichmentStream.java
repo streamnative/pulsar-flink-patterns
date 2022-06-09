@@ -1,6 +1,6 @@
-package io.ipolyzos.compute.v3;
+package io.ipolyzos.compute.sideoutputs;
 
-import io.ipolyzos.compute.v3.handlers.EnrichmentHandler;
+import io.ipolyzos.compute.sideoutputs.handlers.EnrichmentHandler;
 import io.ipolyzos.config.AppConfig;
 import io.ipolyzos.models.Customer;
 import io.ipolyzos.models.EnrichedEvent;
@@ -23,37 +23,41 @@ import java.time.Duration;
 
 public class EnrichmentStream {
     public static void main(String[] args) throws Exception {
-        // 1. Initialize the execution environment
         StreamExecutionEnvironment environment = EnvironmentUtils.initEnvWithWebUI(true);
         environment.setParallelism(1);
 
         // 2. Initialize Customer Source
-        PulsarSource<Customer> customerSource = PulsarSource.builder()
-                .setServiceUrl(AppConfig.SERVICE_URL)
-                .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
-                .setStartCursor(StartCursor.earliest())
-                .setTopics(AppConfig.CUSTOMERS_TOPIC)
-                .setDeserializationSchema(PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Customer.class), Customer.class))
-                .setSubscriptionName("c-subs")
-//                .setUnboundedStopCursor()
-//                .setUnboundedStopCursor(StopCursor.atEventTime(System.currentTimeMillis()))
-                .setBoundedStopCursor(StopCursor.atEventTime(System.currentTimeMillis()))
-                .setSubscriptionType(SubscriptionType.Exclusive)
-                .build();
+        PulsarSource<Customer> customerSource =
+                PulsarSource
+                        .builder()
+                        .setServiceUrl(AppConfig.SERVICE_URL)
+                        .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
+                        .setStartCursor(StartCursor.earliest())
+                        .setTopics(AppConfig.CUSTOMERS_TOPIC)
+                        .setDeserializationSchema(
+                                PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Customer.class), Customer.class)
+                        )
+                        .setSubscriptionName("customer-subscription")
+                        .setSubscriptionType(SubscriptionType.Exclusive)
+                        .build();
 
         // 3. Initialize Transactions Source
-        PulsarSource<Transaction> transactionSource = PulsarSource.builder()
-                .setServiceUrl(AppConfig.SERVICE_URL)
-                .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
-                .setStartCursor(StartCursor.latest())
-                .setTopics(AppConfig.TRANSACTIONS_TOPIC_AVRO)
-                .setDeserializationSchema(PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Transaction.class), Transaction.class))
-                .setSubscriptionName("txn-subs")
-                .setSubscriptionType(SubscriptionType.Exclusive)
-                .build();
+        PulsarSource<Transaction> transactionSource =
+                PulsarSource
+                        .builder()
+                        .setServiceUrl(AppConfig.SERVICE_URL)
+                        .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
+                        .setStartCursor(StartCursor.earliest())
+                        .setTopics(AppConfig.TRANSACTIONS_TOPIC_AVRO)
+                        .setDeserializationSchema(
+                                PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Transaction.class), Transaction.class)
+                        )
+                        .setSubscriptionName("txn-subscription")
+                        .setSubscriptionType(SubscriptionType.Exclusive)
+                        .build();
 
         WatermarkStrategy<Transaction> watermarkStrategy =
-                WatermarkStrategy.<Transaction>forBoundedOutOfOrderness(Duration.ofSeconds(0))
+                WatermarkStrategy.<Transaction>forBoundedOutOfOrderness(Duration.ofSeconds(5))
                         .withTimestampAssigner(
                                 (SerializableTimestampAssigner<Transaction>) (txn, l) -> txn.getEventTime()
                         );
@@ -83,16 +87,11 @@ public class EnrichmentStream {
                 .name("EnrichmentHandler");
 
         DataStream<EnrichedEvent> missingStateStream = enrichedStream.getSideOutput(missingStateTag);
-//        missingStateStream
-//                .print()
-//                .uid("missingStatePrint")
-//                .name("missingStatePrint");
-
-        enrichedStream
+        missingStateStream
                 .print()
-                .uid("print")
-                .name("print");
+                .uid("missingStatePrint")
+                .name("missingStatePrint");
 
-        environment.execute("Data Enrichment Stream");
+        environment.execute("Data Enrichment Stream - Missing State and Side Outputs");
     }
 }
