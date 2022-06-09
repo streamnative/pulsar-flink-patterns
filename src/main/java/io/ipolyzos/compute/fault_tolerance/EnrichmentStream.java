@@ -88,7 +88,7 @@ public class EnrichmentStream {
         // 5. Initialize Customer Stream
         DataStream<Customer> customerStream =
                 environment
-                        .fromSource(customerSource, WatermarkStrategy.noWatermarks(), "Customer Source")
+                        .fromSource(customerSource, WatermarkStrategy.forMonotonousTimestamps(), "Customer Source")
                         .name("CustomerSource")
                         .uid("CustomerSource");
 

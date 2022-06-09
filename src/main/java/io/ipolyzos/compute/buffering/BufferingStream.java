@@ -1,6 +1,6 @@
-package io.ipolyzos.compute.enrichment;
+package io.ipolyzos.compute.buffering;
 
-import io.ipolyzos.compute.enrichment.handlers.EnrichmentHandler;
+import io.ipolyzos.compute.buffering.handlers.BufferingHandler;
 import io.ipolyzos.config.AppConfig;
 import io.ipolyzos.models.Customer;
 import io.ipolyzos.models.EnrichedEvent;
@@ -18,7 +18,7 @@ import org.apache.pulsar.client.impl.schema.AvroSchema;
 
 import java.time.Duration;
 
-public class EnrichmentStream {
+public class BufferingStream {
     public static void main(String[] args) throws Exception {
         // 1. Initialize the execution environment
         StreamExecutionEnvironment environment = EnvironmentUtils.initEnvWithWebUI(true);
@@ -78,7 +78,7 @@ public class EnrichmentStream {
         DataStream<EnrichedEvent> enrichedStream = transactionStream
                 .keyBy(Transaction::getCustomerId)
                 .connect(customerStream.keyBy(Customer::getCustomerId))
-                .process(new EnrichmentHandler())
+                .process(new BufferingHandler())
                 .uid("CustomerLookup")
                 .name("CustomerLookup");
 

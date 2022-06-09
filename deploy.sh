@@ -4,22 +4,3 @@ docker cp \
   target/pulsar-flink-stateful-streams-0.1.0.jar \
   pulsar-flink-stateful-streams_taskmanager_1:opt/flink/job.jar
 
-# To run v1 of the code
-docker exec -it pulsar-flink-stateful-streams_taskmanager_1 ./bin/flink run \
---class io.ipolyzos.compute.v1.EnrichmentStream \
-  job.jar
-
-# To run v2 of the code
-#docker exec -it pulsar-flink-stateful-streams_taskmanager_1 ./bin/flink run \
-#--class io.ipolyzos.compute.sideoutputs.EnrichmentStream \
-#  job.jar
-#
-## To run v3 of the code
-#docker exec -it pulsar-flink-stateful-streams_taskmanager_1 ./bin/flink run \
-#--class io.ipolyzos.compute.fault_tolerance.EnrichmentStream \
-#  job.jar
-#
-## To run v4 of the code
-#docker exec -it pulsar-flink-stateful-streams_taskmanager_1 ./bin/flink run \
-#--class io.ipolyzos.compute.v4.EnrichmentStream \
-#  job.jar

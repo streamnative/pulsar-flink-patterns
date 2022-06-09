@@ -10,15 +10,11 @@ this script will create all the required topics and policies needed for the prov
 3. [Handling Multiple Streams](#handling-multiple-streams)
 4. [Warmup - Keyed State](#keyed-state)
 5. [Performing Data Enrichment and Lookups](#data-enrichment-and-lookups)
-6. [Side Outputs](#side-outputs)
-7. [State Backends](#state-backends)
-8. [Checkpoints, Savepoints and Restart Strategies](#checkpoints-savepoints-and-restart-strategies)
-
-### Warmup
-**Outcomes:** How can we connect to Pulsar and start consuming events.
-We will see how we can achieve this by using:
-1. [The Datastream API](src/main/java/io/ipolyzos/compute/source/datastream) 
-2. [The Flink SQL API](src/main/java/io/ipolyzos/compute/source/sql)
+6. [Buffering](#buffering)
+7. [Side Outputs](#side-outputs)
+8. [State Backends](#state-backends)
+9. [Checkpoints, Savepoints and Restart Strategies](#checkpoints-savepoints-and-restart-strategies)
+10. [Additional Resources](#additional-resources)
 
 ### Environment Setup
 In order to run the code samples we will need a Pulsar and Flink cluster up and running.
@@ -38,6 +34,12 @@ When the cluster is up and running successfully run the following command:
 ```shell
 ./setup.sh
 ```
+
+### Warmup
+**Outcomes:** How can we connect to Pulsar and start consuming events.
+We will see how we can achieve this by using:
+1. [The Datastream API](src/main/java/io/ipolyzos/compute/source/datastream)
+2. [The Flink SQL API](src/main/java/io/ipolyzos/compute/source/sql)
 
 ### Handling Multiple Streams
 **Use Case:**  
@@ -76,6 +78,13 @@ We will see how to implement such use cases by using Flink's combining Flink's p
 transaction events with user information.  
 You can find the relevant examples [here](src/main/java/io/ipolyzos/compute/enrichment).
 
+### Buffering
+**Use Case:**
+This scenario is pretty similar to the previous one, but here we are buffering the events when there is some missing state.  
+We can not guarantee when both matching events will arrive into our system and in such case we might want to buffer the events
+until a matching one arrives.  
+You can find the relevant examples [here](src/main/java/io/ipolyzos/compute/buffering).
+
 ### Side Outputs
 **Use Case:**  
 Some scenarios you might want to split one stream into multiple streams - **stream branches** - and forward
@@ -96,3 +105,5 @@ You can find the relevant examples [here](src/main/java/io/ipolyzos/compute/side
 3. Checkpoints vs Savepoints
 4. How we can recover state from a previous checkpoint  
 You can find the relevant examples [here](src/main/java/io/ipolyzos/compute/fault_tolerance).
+
+### Additional Resources
