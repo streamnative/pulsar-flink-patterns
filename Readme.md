@@ -7,19 +7,15 @@ In order to run the code samples we will need a Pulsar and Flink cluster up and 
 You can also run the Flink examples from within your favorite IDE in which case you don't need a Flink Cluster.
 
 If you want to run the examples inside a Flink Cluster run to start the Pulsar and Flink clusters.
-```shell
-docker-compose up
-```
+> docker-compose up
+
 
 if you want to run within your IDE you can just spin up a pulsar cluster
-```shell
-docker-compose up pulsar
-```
+> docker-compose up pulsar
 
 When the cluster is up and running successfully run the following command:
-```shell
-./setup.sh
-```
+> ./setup.sh
+
 
 this script will create all the required topics and policies needed for the provided examples.
 
@@ -54,7 +50,8 @@ Other options to explore:
 * [Window Joins](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/datastream/operators/joining/#window-join)
   * the events need to belong to the same window and match on some join condition
 * [Interval Joins](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/datastream/operators/joining/#interval-join) 
-  * the events need to be between the same interval, i.e **lowerBoundInterval < timeA - timeB < upperBoundInterval**
+  * the events need to be between the same interval  
+  > lowerBoundInterval < timeA - timeB < upperBoundInterval
 
 
 ### Keyed State
