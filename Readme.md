@@ -39,12 +39,13 @@ We will see how we can achieve this by using:
 2. [The Flink SQL API](src/main/java/io/ipolyzos/compute/source/sql)
 
 ### Handling Multiple Streams
-**Use Case:** In some scenarios you might need to **merge** multiple streams together, for example data from two pulsar topics.
-
+**Use Case:**  
+In some scenarios you might need to **merge** multiple streams together, for example data from two pulsar topics.  
 The input topics events can either the same or different schemas.
-When the input events have the same schema you can use the **union** function, otherwise you can use the **connect** function.
+When the input events have the same schema you can use the **union** function, otherwise you can use the **connect** function. 
 
-**Outcome:** We will how to achieve this using two input transaction topics - one containing **credit** transactions and one with **debits** and **merge** these two
+**Outcome:**  
+We will how to achieve this using two input transaction topics - one containing **credit** transactions and one with **debits** and **merge** these two
 streams into one datastream. We will see two different approaches:
 * [Union Function:](src/main/java/io/ipolyzos/compute/mutlistreams) Input datastreams need to be of the same input data type
 * [Connect Function:](src/main/java/io/ipolyzos/compute/mutlistreams) Input datastreams to be of different types
