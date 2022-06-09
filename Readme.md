@@ -68,7 +68,7 @@ Other options to explore:
 2. How Flink handles state and the available State primitives  
 
 We will review with an example that accumulates state per customer key and calculates: **How many transactions we have per customer?**  
-You can find the relevant examples [here](src/main/java/io/ipolyzos/compute/state)
+**You can find the relevant examples** [here](src/main/java/io/ipolyzos/compute/state)
 
 ### Data Enrichment and Lookups
 **Use Case:**  
@@ -76,14 +76,14 @@ In some scenarios we need to be able to perform **Data Enrichment** and/or **Dat
 **append-only stream** while the other topic is a **changelog** stream - keeps only the latest state for a particular key.  
 We will see how to implement such use cases by using Flink's combining Flink's process function and Keyed State to enrich 
 transaction events with user information.  
-You can find the relevant examples [here](src/main/java/io/ipolyzos/compute/enrichment).
+**You can find the relevant examples** [here](src/main/java/io/ipolyzos/compute/enrichment).
 
 ### Buffering
 **Use Case:**
 This scenario is pretty similar to the previous one, but here we are buffering the events when there is some missing state.  
 We can not guarantee when both matching events will arrive into our system and in such case we might want to buffer the events
 until a matching one arrives.  
-You can find the relevant examples [here](src/main/java/io/ipolyzos/compute/buffering).
+**You can find the relevant examples** [here](src/main/java/io/ipolyzos/compute/buffering).
 
 ### Side Outputs
 **Use Case:**  
@@ -91,19 +91,19 @@ Some scenarios you might want to split one stream into multiple streams - **stre
 them to different downstream operators for further processing.  
 We will see how to implement such a use cases in order to account for **unhappy paths**. Following our **Data Enrichment** example, we will see
 how to handle transaction events for which user information is not present (maybe due to some human error or system malfunction).  
-You can find the relevant examples [here](src/main/java/io/ipolyzos/compute/sideoutputs).
+**You can find the relevant examples** [here](src/main/java/io/ipolyzos/compute/sideoutputs).
 
 ### State Backends
-**Outcomes:**  
-1. Understand Flink State backends
-2. Use RocksDB as the state backend to handle state that can't fit in memory
+**Outcomes:**
+- Understand Flink State backends
+- Use RocksDB as the state backend to handle state that can't fit in memory
 
 ### Checkpoints, Savepoints and Restart Strategies
 **Outcomes:**
-1. Understand how Flink's Checkpointing mechanism works
-2. Understand how we can combine Flink checkpoints and Restart Strategies to recover our job
-3. Checkpoints vs Savepoints
-4. How we can recover state from a previous checkpoint  
-You can find the relevant examples [here](src/main/java/io/ipolyzos/compute/fault_tolerance).
+- Understand how Flink's Checkpointing mechanism works
+- Understand how we can combine Flink checkpoints and Restart Strategies to recover our job
+- Checkpoints vs Savepoints 
+- How we can recover state from a previous checkpoint  
+**You can find the relevant examples** [here](src/main/java/io/ipolyzos/compute/fault_tolerance).
 
 ### Additional Resources
