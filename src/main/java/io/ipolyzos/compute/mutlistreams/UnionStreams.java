@@ -1,4 +1,4 @@
-package io.ipolyzos.compute.source;
+package io.ipolyzos.compute.mutlistreams;
 
 import io.ipolyzos.config.AppConfig;
 import io.ipolyzos.models.Transaction;
@@ -7,25 +7,43 @@ import org.apache.flink.api.common.eventtime.SerializableTimestampAssigner;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.connector.pulsar.source.PulsarSource;
 import org.apache.flink.connector.pulsar.source.enumerator.cursor.StartCursor;
+import org.apache.flink.connector.pulsar.source.enumerator.cursor.StopCursor;
 import org.apache.flink.connector.pulsar.source.reader.deserializer.PulsarDeserializationSchema;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.pulsar.client.api.SubscriptionType;
 import org.apache.pulsar.client.impl.schema.AvroSchema;
+
 import java.time.Duration;
 
-public class TransactionSource {
+/**
+ * When to use Union?*
+ * */
+public class UnionStreams {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment environment =
                 EnvironmentUtils.initEnvWithWebUI(true);
+        environment.setParallelism(1);
 
-        PulsarSource<Transaction> transactionSource = PulsarSource.builder()
+        PulsarSource<Transaction> creditSource = PulsarSource.builder()
                 .setServiceUrl(AppConfig.SERVICE_URL)
                 .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
                 .setStartCursor(StartCursor.latest())
-                .setTopics(AppConfig.TRANSACTIONS_TOPIC)
+                .setTopics(AppConfig.CREDITS_TOPIC)
                 .setDeserializationSchema(PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Transaction.class), Transaction.class))
-                .setSubscriptionName("txn-subs")
+                .setSubscriptionName("credits-subs")
+                .setUnboundedStopCursor(StopCursor.never())
+                .setSubscriptionType(SubscriptionType.Exclusive)
+                .build();
+
+        PulsarSource<Transaction> debitsSource = PulsarSource.builder()
+                .setServiceUrl(AppConfig.SERVICE_URL)
+                .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
+                .setStartCursor(StartCursor.latest())
+                .setTopics(AppConfig.DEBITS_TOPIC)
+                .setDeserializationSchema(PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Transaction.class), Transaction.class))
+                .setSubscriptionName("debits-subs")
+                .setUnboundedStopCursor(StopCursor.never())
                 .setSubscriptionType(SubscriptionType.Exclusive)
                 .build();
 
@@ -35,17 +53,21 @@ public class TransactionSource {
                                 (SerializableTimestampAssigner<Transaction>) (txn, l) -> txn.getEventTime()
                         );
 
-        DataStream<Transaction> transactionStream =
+        DataStream<Transaction> creditStream =
                 environment
-                        .fromSource(transactionSource, watermarkStrategy, "Transactions Source")
-                        .name("TransactionSource")
-                        .uid("TransactionSource");
+                        .fromSource(creditSource, watermarkStrategy, "Credits Source")
+                        .name("CreditSource")
+                        .uid("CreditSource");
 
-        transactionStream
-                .print()
-                .uid("print")
-                .name("print");
+        DataStream<Transaction> debitsStream =
+                environment
+                        .fromSource(debitsSource, watermarkStrategy, "Debit Source")
+                        .name("DebitSource")
+                        .uid("DebitSource");
 
-        environment.execute("Transactions Source Stream");
+        creditStream
+                .union(debitsStream)
+                .print();
+        environment.execute("Union Stream");
     }
 }

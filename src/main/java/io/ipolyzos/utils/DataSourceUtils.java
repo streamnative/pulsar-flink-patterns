@@ -1,12 +1,24 @@
 package io.ipolyzos.utils;
 
+import io.ipolyzos.config.AppConfig;
 import io.ipolyzos.models.Account;
 import io.ipolyzos.models.Customer;
 import io.ipolyzos.models.Transaction;
+import org.apache.flink.api.common.eventtime.SerializableTimestampAssigner;
+import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+import org.apache.flink.connector.pulsar.source.PulsarSource;
+import org.apache.flink.connector.pulsar.source.enumerator.cursor.StartCursor;
+import org.apache.flink.connector.pulsar.source.reader.deserializer.PulsarDeserializationSchema;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.pulsar.client.api.SubscriptionType;
+import org.apache.pulsar.client.impl.schema.AvroSchema;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.util.stream.Stream;
 
 public class DataSourceUtils {
@@ -64,5 +76,34 @@ public class DataSourceUtils {
 
     private static Double parseDouble(String id) {
         return Double.parseDouble(id.replace(".0", ""));
+    }
+
+    public static DataStream<Transaction> getTransactionsStream(StreamExecutionEnvironment environment) {
+        PulsarSource<Transaction> transactionSource = PulsarSource.builder()
+                .setServiceUrl(AppConfig.SERVICE_URL)
+                .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
+                .setStartCursor(StartCursor.latest())
+                .setTopics(AppConfig.TRANSACTIONS_TOPIC_AVRO)
+                .setDeserializationSchema(
+                        PulsarDeserializationSchema
+                                .pulsarSchema(AvroSchema.of(Transaction.class), Transaction.class)
+                )
+                .setSubscriptionName("txn-subs")
+                .setSubscriptionType(SubscriptionType.Exclusive)
+                .build();
+
+        WatermarkStrategy<Transaction> watermarkStrategy =
+                WatermarkStrategy.<Transaction>forBoundedOutOfOrderness(Duration.ofSeconds(0))
+                        .withTimestampAssigner(
+                                (SerializableTimestampAssigner<Transaction>) (txn, l) -> txn.getEventTime()
+                        );
+
+        DataStream<Transaction> transactionStream =
+                environment
+                        .fromSource(transactionSource, watermarkStrategy, "Transactions Source")
+                        .name("TransactionSource")
+                        .uid("TransactionSource");
+
+        return transactionStream;
     }
 }

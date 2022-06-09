@@ -1,22 +1,22 @@
-package io.ipolyzos.producers;
+package io.ipolyzos.producers.json;
 
 import io.ipolyzos.config.AppConfig;
 import io.ipolyzos.models.Customer;
 import io.ipolyzos.utils.ClientUtils;
-import java.io.IOException;
 import io.ipolyzos.utils.DataSourceUtils;
-
-import java.util.Iterator;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiConsumer;
-import java.util.stream.Stream;
 import org.apache.pulsar.client.api.MessageId;
 import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
-import org.apache.pulsar.client.impl.schema.AvroSchema;
+import org.apache.pulsar.client.impl.schema.JSONSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 public class CustomersProducer {
     private static final Logger logger
@@ -26,15 +26,13 @@ public class CustomersProducer {
         Stream<Customer> customers = DataSourceUtils.loadDataFile(AppConfig.CUSTOMERS_FILE_PATH)
                 .map(DataSourceUtils::toCustomer);
 
-        customers.forEach(System.out::println);
-        System.exit(0);
         logger.info("Creating Pulsar Client ...");
 
         PulsarClient pulsarClient = ClientUtils.initPulsarClient(AppConfig.token);
 
         logger.info("Creating User Producer ...");
         Producer<Customer> customerProducer
-                = pulsarClient.newProducer(AvroSchema.of(Customer.class))
+                = pulsarClient.newProducer(JSONSchema.of(Customer.class))
                 .producerName("c-producer")
                 .topic(AppConfig.CUSTOMERS_TOPIC)
                 .blockIfQueueFull(true)

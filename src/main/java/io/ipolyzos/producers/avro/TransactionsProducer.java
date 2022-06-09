@@ -1,4 +1,4 @@
-package io.ipolyzos.producers;
+package io.ipolyzos.producers.avro;
 
 import io.ipolyzos.models.Transaction;
 import io.ipolyzos.utils.ClientUtils;
@@ -7,6 +7,7 @@ import io.ipolyzos.utils.DataSourceUtils;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 import org.apache.pulsar.client.api.MessageId;
@@ -32,31 +33,42 @@ public class TransactionsProducer {
         Producer<Transaction> transactionProducer
                 = pulsarClient.newProducer(AvroSchema.of(Transaction.class))
                 .producerName("txn-producer")
-                .topic(AppConfig.TRANSACTIONS_TOPIC)
+                .topic(AppConfig.TRANSACTIONS_TOPIC_JSON)
                 .blockIfQueueFull(true)
                 .create();
 
-        AtomicInteger counter = new AtomicInteger();
+        AtomicInteger counter = new AtomicInteger(1);
         for (Iterator<Transaction> it = transactions.iterator(); it.hasNext(); ) {
             Transaction transaction = it.next();
 
-            MessageId id = transactionProducer
+            transactionProducer
                     .newMessage()
+                    .key(transaction.getCustomerId())
                     .value(transaction)
                     .eventTime(System.currentTimeMillis())
-                    .send();
-            counter.getAndIncrement();
-            logger.info("✅ Acked message {} - {}.", id, transaction);
+                    .sendAsync()
+                    .whenComplete(callback(counter));
         }
 
-        logger.info("Sent '{}' transaction events.", counter.get());
-        logger.info("Closing Resources...");
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            logger.info("Sent '{}' customer records.", counter.get());
+            logger.info("Closing Resources...");
+            try {
+                transactionProducer.close();
+                pulsarClient.close();
+            } catch (PulsarClientException e) {
+                e.printStackTrace();
+            }
+        }));
+    }
 
-        try {
-            transactionProducer.close();
-            pulsarClient.close();
-        } catch (PulsarClientException e) {
-            e.printStackTrace();
-        }
+    private static BiConsumer<MessageId, Throwable> callback(AtomicInteger counter) {
+        return (id, exception) -> {
+            if (exception != null) {
+                logger.error("❌ Failed message: {}", exception.getMessage());
+            } else {
+                logger.info("✅ Acked message {} - Total {}", id, counter.getAndIncrement());
+            }
+        };
     }
 }

@@ -6,7 +6,10 @@ public class AppConfig {
     public static final String SERVICE_HTTP_URL = "http://localhost:8080";
     public static final String SERVICE_URL      = "pulsar://localhost:6650";
 
-    public static final String TRANSACTIONS_TOPIC = "transactions";
+    public static final String TRANSACTIONS_TOPIC_AVRO = "transactions-avro";
+    public static final String TRANSACTIONS_TOPIC_JSON = "transactions-json";
+    public static final String DEBITS_TOPIC       = "debits";
+    public static final String CREDITS_TOPIC      = "credits";
     public static final String CUSTOMERS_TOPIC  = "customers";
 
 

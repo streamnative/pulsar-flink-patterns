@@ -46,7 +46,7 @@ public class EnrichmentStream {
                 .setServiceUrl(AppConfig.SERVICE_URL)
                 .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
                 .setStartCursor(StartCursor.latest())
-                .setTopics(AppConfig.TRANSACTIONS_TOPIC)
+                .setTopics(AppConfig.TRANSACTIONS_TOPIC_AVRO)
                 .setDeserializationSchema(PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Transaction.class), Transaction.class))
                 .setSubscriptionName("txn-subs")
                 .setSubscriptionType(SubscriptionType.Exclusive)
@@ -62,19 +62,13 @@ public class EnrichmentStream {
         DataStream<Transaction> transactionStream =
                 environment
                         .fromSource(transactionSource, watermarkStrategy, "Transactions Source")
-                        .assignTimestampsAndWatermarks(watermarkStrategy)
-                        .map(txn -> {
-                            String id = txn.getAccountId();
-                            txn.setAccountId(id.replace("A", "C"));
-                            return txn;
-                        }).assignTimestampsAndWatermarks(watermarkStrategy)
                         .name("TransactionSource")
                         .uid("TransactionSource");
 
         // 5. Initialize Customer Stream
         DataStream<Customer> customerStream =
                 environment
-                        .fromSource(customerSource, WatermarkStrategy.noWatermarks(), "Customer Source")
+                        .fromSource(customerSource, WatermarkStrategy.forMonotonousTimestamps(), "Customer Source")
                         .name("CustomerSource")
                         .uid("CustomerSource");
 
@@ -82,22 +76,22 @@ public class EnrichmentStream {
 
 
         SingleOutputStreamOperator<EnrichedEvent> enrichedStream = transactionStream
-                .keyBy(Transaction::getAccountId)
+                .keyBy(Transaction::getCustomerId)
                 .connect(customerStream.keyBy(Customer::getCustomerId))
                 .process(new EnrichmentHandler(missingStateTag))
                 .uid("EnrichmentHandler")
                 .name("EnrichmentHandler");
 
         DataStream<EnrichedEvent> missingStateStream = enrichedStream.getSideOutput(missingStateTag);
-        missingStateStream
-                .print()
-                .uid("missingStatePrint")
-                .name("missingStatePrint");
-
-//        enrichedStream
+//        missingStateStream
 //                .print()
-//                .uid("print")
-//                .name("print");
+//                .uid("missingStatePrint")
+//                .name("missingStatePrint");
+
+        enrichedStream
+                .print()
+                .uid("print")
+                .name("print");
 
         environment.execute("Data Enrichment Stream");
     }

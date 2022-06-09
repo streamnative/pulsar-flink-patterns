@@ -60,7 +60,7 @@ public class EnrichmentStream {
                 .setServiceUrl(AppConfig.SERVICE_URL)
                 .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
                 .setStartCursor(StartCursor.latest())
-                .setTopics(AppConfig.TRANSACTIONS_TOPIC)
+                .setTopics(AppConfig.TRANSACTIONS_TOPIC_AVRO)
                 .setDeserializationSchema(PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Transaction.class), Transaction.class))
                 .setSubscriptionName("txn-subs")
                 .setSubscriptionType(SubscriptionType.Exclusive)
