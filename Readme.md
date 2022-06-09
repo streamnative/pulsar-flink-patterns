@@ -50,7 +50,7 @@ streams into one datastream. We will see two different approaches:
 * [Union Function:](src/main/java/io/ipolyzos/compute/mutlistreams) Input datastreams need to be of the same input data type
 * [Connect Function:](src/main/java/io/ipolyzos/compute/mutlistreams) Input datastreams to be of different types
 
-Extra to explore:
+Other options to explore:
 * [Window Joins](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/datastream/operators/joining/#window-join)
   * the events need to belong to the same window and match on some join condition
 * [Interval Joins](https://nightlies.apache.org/flink/flink-docs-release-1.15/docs/dev/datastream/operators/joining/#interval-join) 
