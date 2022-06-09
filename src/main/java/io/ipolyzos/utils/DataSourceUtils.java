@@ -1,7 +1,6 @@
 package io.ipolyzos.utils;
 
 import io.ipolyzos.config.AppConfig;
-import io.ipolyzos.models.Account;
 import io.ipolyzos.models.Customer;
 import io.ipolyzos.models.Transaction;
 import org.apache.flink.api.common.eventtime.SerializableTimestampAssigner;
@@ -43,15 +42,6 @@ public class DataSourceUtils {
         );
     }
 
-    public static Account toAccount(String line) {
-        String[] tokens = line.split(",");
-        return new Account(
-                tokens[0],
-                tokens[1],
-                tokens[2],
-                tokens[7]
-        );
-    }
 
     public static Customer toCustomer(String line) {
         String[] tokens = line.split(",");

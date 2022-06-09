@@ -4,7 +4,7 @@ import io.ipolyzos.models.Transaction;
 import org.apache.flink.streaming.api.functions.co.CoProcessFunction;
 import org.apache.flink.util.Collector;
 
-public class RationCalcFunc extends CoProcessFunction<Transaction, Transaction, String> {
+public class RatioCalcFunc extends CoProcessFunction<Transaction, Transaction, String> {
     private int totalDebitsCount = 0;
     private int totalCreditsCount = 0;
 

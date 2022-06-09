@@ -1,6 +1,6 @@
 package io.ipolyzos.compute.mutlistreams;
 
-import io.ipolyzos.compute.mutlistreams.functions.RationCalcFunc;
+import io.ipolyzos.compute.mutlistreams.functions.RatioCalcFunc;
 import io.ipolyzos.config.AppConfig;
 import io.ipolyzos.models.Transaction;
 import io.ipolyzos.utils.EnvironmentUtils;
@@ -17,39 +17,41 @@ import org.apache.pulsar.client.impl.schema.AvroSchema;
 
 import java.time.Duration;
 
-/**
- * The connect function can process datastreams of
- * different input types.
- *  - in this example we use the same input type though and
- *    we calculate the ratio of debits and credits on the overall events
- * */
 public class ConnectStreams {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment environment =
                 EnvironmentUtils.initEnvWithWebUI(true);
-//        environment.setParallelism(1);
+        environment.setParallelism(1);
 
-        PulsarSource<Transaction> creditSource = PulsarSource.builder()
-                .setServiceUrl(AppConfig.SERVICE_URL)
-                .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
-                .setStartCursor(StartCursor.latest())
-                .setTopics(AppConfig.CREDITS_TOPIC)
-                .setDeserializationSchema(PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Transaction.class), Transaction.class))
-                .setSubscriptionName("credits-subs")
-                .setUnboundedStopCursor(StopCursor.never())
-                .setSubscriptionType(SubscriptionType.Exclusive)
-                .build();
+        PulsarSource<Transaction> creditSource =
+                PulsarSource
+                        .builder()
+                        .setServiceUrl(AppConfig.SERVICE_URL)
+                        .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
+                        .setStartCursor(StartCursor.earliest())
+                        .setTopics(AppConfig.CREDITS_TOPIC)
+                        .setDeserializationSchema(
+                                PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Transaction.class), Transaction.class)
+                        )
+                        .setSubscriptionName("credits-subs")
+                        .setUnboundedStopCursor(StopCursor.never())
+                        .setSubscriptionType(SubscriptionType.Exclusive)
+                        .build();
 
-        PulsarSource<Transaction> debitsSource = PulsarSource.builder()
-                .setServiceUrl(AppConfig.SERVICE_URL)
-                .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
-                .setStartCursor(StartCursor.latest())
-                .setTopics(AppConfig.DEBITS_TOPIC)
-                .setDeserializationSchema(PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Transaction.class), Transaction.class))
-                .setSubscriptionName("debits-subs")
-                .setUnboundedStopCursor(StopCursor.never())
-                .setSubscriptionType(SubscriptionType.Exclusive)
-                .build();
+        PulsarSource<Transaction> debitsSource =
+                PulsarSource
+                        .builder()
+                        .setServiceUrl(AppConfig.SERVICE_URL)
+                        .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
+                        .setStartCursor(StartCursor.earliest())
+                        .setTopics(AppConfig.DEBITS_TOPIC)
+                        .setDeserializationSchema(
+                                PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Transaction.class), Transaction.class)
+                        )
+                        .setSubscriptionName("debits-subs")
+                        .setUnboundedStopCursor(StopCursor.never())
+                        .setSubscriptionType(SubscriptionType.Exclusive)
+                        .build();
 
         WatermarkStrategy<Transaction> watermarkStrategy =
                 WatermarkStrategy.<Transaction>forBoundedOutOfOrderness(Duration.ofSeconds(5))
@@ -71,8 +73,9 @@ public class ConnectStreams {
 
         creditStream
                 .connect(debitsStream)
-                .process(new RationCalcFunc())
-                .print();
+                .process(new RatioCalcFunc())
+                .print()
+        ;
         environment.execute("Connected Streams");
     }
 }

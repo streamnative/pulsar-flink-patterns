@@ -1,4 +1,4 @@
-package io.ipolyzos.producers;
+package io.ipolyzos.producers.avro;
 
 import io.ipolyzos.config.AppConfig;
 import io.ipolyzos.models.Transaction;

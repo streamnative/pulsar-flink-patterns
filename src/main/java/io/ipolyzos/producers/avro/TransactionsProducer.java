@@ -32,8 +32,8 @@ public class TransactionsProducer {
         logger.info("Creating Transactions Producer ...");
         Producer<Transaction> transactionProducer
                 = pulsarClient.newProducer(AvroSchema.of(Transaction.class))
-                .producerName("txn-producer")
-                .topic(AppConfig.TRANSACTIONS_TOPIC_JSON)
+                .producerName("txn-avro-producer")
+                .topic(AppConfig.TRANSACTIONS_TOPIC_AVRO)
                 .blockIfQueueFull(true)
                 .create();
 

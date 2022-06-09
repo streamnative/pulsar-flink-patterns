@@ -23,8 +23,9 @@ public class TransactionsProducer {
             = LoggerFactory.getLogger(TransactionsProducer.class);
 
     public static void main(String[] args) throws IOException {
-        Stream<Transaction> transactions = DataSourceUtils.loadDataFile(AppConfig.TRANSACTIONS_FILE_PATH)
-                .map(DataSourceUtils::toTransaction);
+        Stream<Transaction> transactions = DataSourceUtils
+                .loadDataFile(AppConfig.TRANSACTIONS_FILE_PATH)
+                .map(DataSourceUtils::toTransaction).limit(10);
 
         logger.info("Creating Pulsar Client ...");
 
@@ -33,7 +34,7 @@ public class TransactionsProducer {
         logger.info("Creating Transactions Producer ...");
         Producer<Transaction> transactionProducer
                 = pulsarClient.newProducer(JSONSchema.of(Transaction.class))
-                .producerName("txn-producer")
+                .producerName("txn-avro-producer")
                 .topic(AppConfig.TRANSACTIONS_TOPIC_JSON)
                 .blockIfQueueFull(true)
                 .create();

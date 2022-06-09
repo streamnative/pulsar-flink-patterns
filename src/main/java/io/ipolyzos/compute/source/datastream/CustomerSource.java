@@ -13,36 +13,47 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.pulsar.client.api.SubscriptionType;
 import org.apache.pulsar.client.impl.schema.AvroSchema;
 
-import java.time.Duration;
-
 public class CustomerSource {
     public static void main(String[] args) throws Exception {
+        // 1. Create an execution environment
         StreamExecutionEnvironment environment =
                 EnvironmentUtils.initEnvWithWebUI(true);
 
-        PulsarSource<Customer> customerSource = PulsarSource.builder()
-                .setServiceUrl(AppConfig.SERVICE_URL)
-                .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
-                .setStartCursor(StartCursor.earliest())
-                .setTopics(AppConfig.CUSTOMERS_TOPIC)
-                .setDeserializationSchema(PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Customer.class), Customer.class))
-                .setSubscriptionName("c-subs")
-                .setUnboundedStopCursor(StopCursor.never())
-                .setSubscriptionType(SubscriptionType.Exclusive)
-                .build();
+        // 2. Create a Pulsar Source
+        PulsarSource<Customer> customerSource =
+                PulsarSource
+                        .builder()
+                        .setServiceUrl(AppConfig.SERVICE_URL)
+                        .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
+                        .setStartCursor(StartCursor.earliest())
+                        .setTopics(AppConfig.CUSTOMERS_TOPIC)
+                        .setDeserializationSchema(
+                                PulsarDeserializationSchema.pulsarSchema
+                                        (AvroSchema.of(Customer.class), Customer.class)
+                        )
+                        .setSubscriptionName("customer-subs")
+                        .setUnboundedStopCursor(StopCursor.never())
+                        .setSubscriptionType(SubscriptionType.Exclusive)
+                        .build();
 
+        // 3. Create a watermark strategy
+        WatermarkStrategy<Customer> watermarkStrategy
+                = WatermarkStrategy.forMonotonousTimestamps();
 
+        // 4. Create a DataStream
         DataStream<Customer> customerStream =
                 environment
-                        .fromSource(customerSource, WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofSeconds(5)), "Customer Source")
+                        .fromSource(customerSource, watermarkStrategy, "Customer Source")
                         .name("CustomerSource")
                         .uid("CustomerSource");
 
+        // 5. Print it to the console
         customerStream
                 .print()
                 .uid("print")
                 .name("print");
 
+        // 6. Execute the program
         environment.execute("Customer Source Stream");
     }
 }

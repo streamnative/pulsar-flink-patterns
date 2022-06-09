@@ -33,7 +33,7 @@ public class CustomersProducer {
         logger.info("Creating User Producer ...");
         Producer<Customer> customerProducer
                 = pulsarClient.newProducer(JSONSchema.of(Customer.class))
-                .producerName("c-producer")
+                .producerName("customers-json-producer")
                 .topic(AppConfig.CUSTOMERS_TOPIC)
                 .blockIfQueueFull(true)
                 .create();

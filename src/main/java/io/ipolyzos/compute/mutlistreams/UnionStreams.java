@@ -16,36 +16,39 @@ import org.apache.pulsar.client.impl.schema.AvroSchema;
 
 import java.time.Duration;
 
-/**
- * When to use Union?*
- * */
 public class UnionStreams {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment environment =
                 EnvironmentUtils.initEnvWithWebUI(true);
         environment.setParallelism(1);
 
-        PulsarSource<Transaction> creditSource = PulsarSource.builder()
-                .setServiceUrl(AppConfig.SERVICE_URL)
-                .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
-                .setStartCursor(StartCursor.latest())
-                .setTopics(AppConfig.CREDITS_TOPIC)
-                .setDeserializationSchema(PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Transaction.class), Transaction.class))
-                .setSubscriptionName("credits-subs")
-                .setUnboundedStopCursor(StopCursor.never())
-                .setSubscriptionType(SubscriptionType.Exclusive)
-                .build();
+        PulsarSource<Transaction> creditSource =
+                PulsarSource
+                        .builder()
+                        .setServiceUrl(AppConfig.SERVICE_URL)
+                        .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
+                        .setStartCursor(StartCursor.earliest())
+                        .setTopics(AppConfig.CREDITS_TOPIC)
+                        .setDeserializationSchema(
+                                PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Transaction.class), Transaction.class)
+                        )
+                        .setSubscriptionName("credits-subscription")
+                        .setUnboundedStopCursor(StopCursor.never())
+                        .setSubscriptionType(SubscriptionType.Exclusive)
+                        .build();
 
-        PulsarSource<Transaction> debitsSource = PulsarSource.builder()
-                .setServiceUrl(AppConfig.SERVICE_URL)
-                .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
-                .setStartCursor(StartCursor.latest())
-                .setTopics(AppConfig.DEBITS_TOPIC)
-                .setDeserializationSchema(PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Transaction.class), Transaction.class))
-                .setSubscriptionName("debits-subs")
-                .setUnboundedStopCursor(StopCursor.never())
-                .setSubscriptionType(SubscriptionType.Exclusive)
-                .build();
+        PulsarSource<Transaction> debitsSource =
+                PulsarSource
+                        .builder()
+                        .setServiceUrl(AppConfig.SERVICE_URL)
+                        .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
+                        .setStartCursor(StartCursor.earliest())
+                        .setTopics(AppConfig.DEBITS_TOPIC)
+                        .setDeserializationSchema(PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Transaction.class), Transaction.class))
+                        .setSubscriptionName("debits-subscription")
+                        .setUnboundedStopCursor(StopCursor.never())
+                        .setSubscriptionType(SubscriptionType.Exclusive)
+                        .build();
 
         WatermarkStrategy<Transaction> watermarkStrategy =
                 WatermarkStrategy.<Transaction>forBoundedOutOfOrderness(Duration.ofSeconds(5))
