@@ -109,4 +109,3 @@ how to handle transaction events for which user information is not present (mayb
 * [Here’s How Apache Flink Stores Your State data](https://towardsdatascience.com/heres-how-flink-stores-your-state-7b37fbb60e1a)
 * [Choosing the correct Flink Restart Strategy](https://kartikiyer.com/2019/05/26/choosing-the-correct-flink-restart-strategy-avoiding-production-gotchas/)
 * [Best Practices and Tips for Working with Flink State: Flink Advanced Tutorials](https://www.alibabacloud.com/blog/best-practices-and-tips-for-working-with-flink-state-flink-advanced-tutorials_596630?spm=a2c65.11461447.0.0.19252ffbl4Nuva)
-* 
