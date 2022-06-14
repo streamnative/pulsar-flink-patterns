@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class EnrichmentStream {
     public static void main(String[] args) throws Exception {
         // 1. Initialize the execution environment
-        StreamExecutionEnvironment environment = EnvironmentUtils.initEnvWithWebUI(true);
+        StreamExecutionEnvironment environment = EnvironmentUtils.initEnvWithWebUI(false);
         environment.setParallelism(1);
 
         // Checkpoints configurations
