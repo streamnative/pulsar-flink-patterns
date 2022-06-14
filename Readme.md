@@ -66,7 +66,7 @@ Other options to explore:
 
 ### Keyed State
 <p align="center">
-    <img src="images/keyed.png" width="800" height="300">
+    <img src="images/keyed.png" width="800" height="400">
 </p>
 
 **Outcomes:**  
@@ -78,7 +78,7 @@ We will review with an example that accumulates state per customer key and calcu
 
 ### Data Enrichment and Lookups
 <p align="center">
-    <img src="images/enrichment.png" width="800" height="300">
+    <img src="images/enrichment.png" width="800" height="400">
 </p>
 
 **Use Case:**  
