@@ -38,7 +38,7 @@ public class CustomersProducer {
                 .blockIfQueueFull(true)
                 .create();
 
-        AtomicInteger counter = new AtomicInteger();
+        AtomicInteger counter = new AtomicInteger(1);
         for (Iterator<Customer> it = customers.iterator(); it.hasNext(); ) {
             Customer customer = it.next();
 

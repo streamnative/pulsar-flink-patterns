@@ -45,6 +45,10 @@ In some scenarios you might need to **merge** multiple streams together, for exa
 The input topics events can either the same or different schemas.
 When the input events have the same schema you can use the **union** function, otherwise you can use the **connect** function. 
 
+<p align="center">
+    <img src="images/merge.png" width="500" height="300">
+</p>
+
 **Outcome:**  
 We will how to achieve this using two input transaction topics - one containing **credit** transactions and one with **debits** and **merge** these two
 streams into one datastream. We will see two different approaches:
@@ -61,6 +65,10 @@ Other options to explore:
 
 
 ### Keyed State
+<p align="center">
+    <img src="images/keyed.png" width="500" height="300">
+</p>
+
 **Outcomes:**  
 1. Understand the difference between **Operator State** and **Keyed State**
 2. How Flink handles state and the available State primitives  
@@ -69,6 +77,10 @@ We will review with an example that accumulates state per customer key and calcu
 **You can find the relevant examples** [here](src/main/java/io/ipolyzos/compute/state)
 
 ### Data Enrichment and Lookups
+<p align="center">
+    <img src="images/enrichment.png" width="500" height="300">
+</p>
+
 **Use Case:**  
 In some scenarios we need to be able to perform **Data Enrichment** and/or **Data Lookups** having on topic as an 
 **append-only stream** while the other topic is a **changelog** stream - keeps only the latest state for a particular key.  

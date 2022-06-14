@@ -23,7 +23,9 @@ public class TxnPerCustomerStream {
 
         // Calculates the number of transactions per Customer Key
         DataStream<String> txnPerCustomerStream = customerKeyedStream
-                .process(new TxnPerCustomerFunc());
+                .process(new TxnPerCustomerFunc())
+                .name("TxnPerCustomerFunc")
+                .uid("TxnPerCustomerFunc");
 
         txnPerCustomerStream
                 .print()
