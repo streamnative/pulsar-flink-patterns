@@ -46,7 +46,7 @@ The input topics events can either the same or different schemas.
 When the input events have the same schema you can use the **union** function, otherwise you can use the **connect** function. 
 
 <p align="center">
-    <img src="images/merge.png" width="500" height="300">
+    <img src="images/merge.png" width="800" height="300">
 </p>
 
 **Outcome:**  
@@ -66,7 +66,7 @@ Other options to explore:
 
 ### Keyed State
 <p align="center">
-    <img src="images/keyed.png" width="500" height="300">
+    <img src="images/keyed.png" width="800" height="300">
 </p>
 
 **Outcomes:**  
@@ -78,7 +78,7 @@ We will review with an example that accumulates state per customer key and calcu
 
 ### Data Enrichment and Lookups
 <p align="center">
-    <img src="images/enrichment.png" width="500" height="300">
+    <img src="images/enrichment.png" width="800" height="300">
 </p>
 
 **Use Case:**  

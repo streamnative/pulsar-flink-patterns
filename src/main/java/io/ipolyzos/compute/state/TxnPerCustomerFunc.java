@@ -24,7 +24,6 @@ public class TxnPerCustomerFunc extends KeyedProcessFunction<String, Transaction
         if (customerTxnNum == null) {
             customerTxnNum = 0;
         }
-        System.out.println(ctx.timerService().currentWatermark());
         ctState.update(customerTxnNum + 1);
         out.collect(
                 String.format(
