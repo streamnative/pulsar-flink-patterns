@@ -23,6 +23,7 @@ public class TransactionSource {
         // 1. Create an execution environment
         StreamExecutionEnvironment environment =
                 EnvironmentUtils.initEnvWithWebUI(true);
+        environment.setParallelism(1);
 
         // 2. Create a Pulsar Source
         PulsarSource<Transaction> transactionSource =

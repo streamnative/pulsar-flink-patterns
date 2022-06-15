@@ -12,7 +12,7 @@ public class TxnPerCustomerStream {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment environment =
                 EnvironmentUtils.initEnvWithWebUI(true);
-        environment.setParallelism(1);
+        environment.setParallelism(2);
 
         DataStream<Transaction> transactionStream = DataSourceUtils
                 .getTransactionsStream(environment);

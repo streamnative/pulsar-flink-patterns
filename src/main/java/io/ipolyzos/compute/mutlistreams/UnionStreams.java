@@ -44,7 +44,9 @@ public class UnionStreams {
                         .setAdminUrl(AppConfig.SERVICE_HTTP_URL)
                         .setStartCursor(StartCursor.earliest())
                         .setTopics(AppConfig.DEBITS_TOPIC)
-                        .setDeserializationSchema(PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Transaction.class), Transaction.class))
+                        .setDeserializationSchema(
+                                PulsarDeserializationSchema.pulsarSchema(AvroSchema.of(Transaction.class), Transaction.class)
+                        )
                         .setSubscriptionName("debits-subscription")
                         .setUnboundedStopCursor(StopCursor.never())
                         .setSubscriptionType(SubscriptionType.Exclusive)
