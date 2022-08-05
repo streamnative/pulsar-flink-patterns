@@ -35,7 +35,6 @@ public class FlinkSQL {
             + "  'scan.startup.mode' = 'earliest' \n"
             + ")\n";
 
-
     public static void main(String[] args) {
         // 1. Create an execution environment
         StreamExecutionEnvironment environment =

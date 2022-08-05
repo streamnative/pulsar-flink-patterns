@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   jobmanager:
-    image: flink:1.14.4-scala_2.12-java11
+    image: streamnative/pulsar-flink:1.15.0.0
     ports:
       - "8081:8081"
     command: jobmanager
@@ -11,7 +11,7 @@ services:
         jobmanager.rpc.address: jobmanager
 
   taskmanager:
-    image: flink:1.14.4-scala_2.12-java11
+    image: streamnative/pulsar-flink:1.15.0.0
     depends_on:
       - jobmanager
     command: taskmanager
@@ -23,7 +23,7 @@ services:
         taskmanager.numberOfTaskSlots: 2
 
   pulsar:
-    image: apachepulsar/pulsar:2.9.1
+    image: apachepulsar/pulsar:2.10.0
     container_name: pulsar
     ports:
       - "8080:8080"

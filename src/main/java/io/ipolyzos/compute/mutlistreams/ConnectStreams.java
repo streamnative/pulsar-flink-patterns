@@ -74,8 +74,8 @@ public class ConnectStreams {
         creditStream
                 .connect(debitsStream)
                 .process(new RatioCalcFunc())
-                .print()
-        ;
+                .print();
+
         environment.execute("Connected Streams");
     }
 }

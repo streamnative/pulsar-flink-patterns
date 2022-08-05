@@ -25,7 +25,7 @@ public class TransactionsProducer {
     public static void main(String[] args) throws IOException {
         Stream<Transaction> transactions = DataSourceUtils
                 .loadDataFile(AppConfig.TRANSACTIONS_FILE_PATH)
-                .map(DataSourceUtils::toTransaction).limit(10);
+                .map(DataSourceUtils::toTransaction);
 
         logger.info("Creating Pulsar Client ...");
 
